@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.bluebutton :hover{
+background-color: #71C0DA;
+}

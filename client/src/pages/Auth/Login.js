@@ -2,18 +2,16 @@ import React, { useState } from "react";
 import Layout from "../../components/layout/Layout";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 
-
-
 const Login = () => {
-    
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [auth,setAuth] = useAuth();
+  const [auth, setAuth] = useAuth();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,17 +19,17 @@ const Login = () => {
       console.log(process.env.REACT_APP_API);
       const res = await axios.post(
         `${process.env.REACT_APP_API}/api/v1/auth/login`,
-        {email, password }
+        { email, password }
       );
       if (res.data.success) {
         toast.success(res.data.message);
         setAuth({
           ...auth,
-          user : res.data.user,
-          token : res.data.token
+          user: res.data.user,
+          token: res.data.token,
         });
-        localStorage.setItem('auth',JSON.stringify(res.data));
-        navigate("/");
+        localStorage.setItem("auth", JSON.stringify(res.data));
+        navigate(location.state || "/");
       } else {
         toast.error(res.data.message);
       }
@@ -42,10 +40,10 @@ const Login = () => {
   };
   return (
     <Layout title="Login- Ecommerce App">
-     <div className="form-container" style={{ minHeight: "90vh" }}>
-          <form onSubmit={handleSubmit}>
+      <div className="form-container" style={{ minHeight: "90vh" }}>
+        <form onSubmit={handleSubmit}>
           <h4 className="title">LOGIN FORM</h4>
-            
+
           <div className="mb-3">
             <input
               type="email"
@@ -68,14 +66,20 @@ const Login = () => {
               required
             />
           </div>
+          <div className="mb-3">
+          <button onClick={()=>{navigate('/forgot-password')}} type="submit" className="btn btn-primary">
+           Forgot Password
+          </button>
+          </div>
           
+
           <button type="submit" className="btn btn-primary">
             Login
           </button>
         </form>
       </div>
-        </Layout>
-  )
-}
+    </Layout>
+  );
+};
 
-export default Login
+export default Login;
